@@ -70,6 +70,9 @@ def run_app(cls):
     @app.route("/invoicing/process/start", methods=["POST"])
     def start_invoicing_process():
         invoices_processes_dict = json.loads(request.data)
+
+        print("start_invoicing_process", invoices_processes_dict)
+
         invoices_processes_datas = [InvoicingProcess(**item) for item in invoices_processes_dict]
         try:
             response_data = shopper_invoicing_adapter.start_invoicing_process(

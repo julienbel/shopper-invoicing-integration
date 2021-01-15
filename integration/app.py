@@ -71,9 +71,10 @@ def run_app(cls):
     def start_invoicing_process():
         invoices_processes_dict = json.loads(request.data)
         invoices_processes_datas = [InvoicingProcess(**item) for item in invoices_processes_dict]
-        print("start_invoicing_process", invoices_processes_datas)
         try:
-            response_data = shopper_invoicing_adapter.start_invoicing_process(invoices_processes_datas)
+            response_data = shopper_invoicing_adapter.start_invoicing_process(
+                invoices_processes_datas
+            )
         except GenericAPIException as e:
             logger.info(
                 "Shopper invoicing integration (start_invoicing_process) request error %s",

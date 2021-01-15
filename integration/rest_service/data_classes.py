@@ -17,6 +17,4 @@ class ErrorResponse:
 
 @dataclass
 class Response:
-    data: Union[
-        CardBalanceResponse, CardResponse, ListCardResponse, WalletBalanceResponse
-    ] = None
+    data: Union[str] = None

@@ -1,4 +1,3 @@
-import base64
 import json
 import logging
 from json import JSONDecodeError
@@ -13,7 +12,6 @@ from integration.rest_service.data_classes import (
     ErrorResponse,
     Response
 )
-from integration.rest_service.exceptions import UnauthorizedSatelliteException
 from integration.rest_service.providers.exceptions import GenericAPIException
 
 logger = logging.getLogger(__name__)
@@ -33,22 +31,9 @@ def run_app(cls):
     assert issubclass(
         cls, ShopperInvoicingClientAdapter
     ), "adapter requires to extend from ShopperInvoicingClientAdapter class"
-    shopper_payments_adapter = cls()
+    shopper_invoicing_adapter = cls()
 
     app = Flask(__name__)
-
-    def validate_request(signature):
-        password = None
-        if signature:
-            if "Bearer" in signature:
-                signature = signature.replace("Bearer", "")
-
-            password = str(base64.b64decode(signature), "utf-8")
-
-        if not password == getenv("REQUEST_PASSWORD"):
-            raise UnauthorizedSatelliteException(
-                error_message="Satellite unauthorized exception"
-            )
 
     def get_error_response(e, code):
         try:
@@ -69,7 +54,7 @@ def run_app(cls):
     def get_logger_data(exception):
         data = {
             "data": {
-                "provider": shopper_payments_adapter.name,
+                "provider": shopper_invoicing_adapter.name,
             }
         }
         message = exception.message if hasattr(exception, "message") else None
@@ -81,15 +66,28 @@ def run_app(cls):
 
         return data
 
+    @app.route("/invoicing/process/start", methods=["POST"])
+    def start_invoicing_process():
+        try:
+            response_data = shopper_invoicing_adapter.start_invoicing_process()
+        except GenericAPIException as e:
+            logger.info(
+                "Shopper invoicing integration (start_invoicing_process) request error %s",
+                e.error_message,
+                extra=get_logger_data(e),
+            )
+            return get_error_response(e, 400)
 
-    @app.route(f"/healthz", methods=["GET"])
+        return jsonify(Response(data=response_data))
+
+    @app.route("/healthz", methods=["GET"])
     def health():
         return {}, 200
 
     # External integration's health
-    @app.route(f"/external_health", methods=["GET"])
+    @app.route("/external_health", methods=["GET"])
     def external_health():
-        if shopper_payments_adapter.external_service_is_healthy():
+        if shopper_invoicing_adapter.external_service_is_healthy():
             return {}, 200
         return {}, 503
 

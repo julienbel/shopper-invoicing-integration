@@ -1,12 +1,8 @@
-from decimal import Decimal
-from typing import Dict, Optional, Union
-
-from .data_classes import (
-)
 
 
 class ShopperInvoicingClientAdapter:
-    def send_mail(self) -> None:
+    def start_invoicing_process(self) -> None:
+        pass
 
     def external_service_is_healthy(self) -> bool:
         raise NotImplementedError

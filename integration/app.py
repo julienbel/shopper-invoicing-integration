@@ -10,7 +10,8 @@ from integration.rest_service.adapters import ShopperInvoicingClientAdapter
 from integration.rest_service.data_classes import (
     ErrorDetail,
     ErrorResponse,
-    Response
+    Response,
+    InvoicingProcess
 )
 from integration.rest_service.providers.exceptions import GenericAPIException
 
@@ -68,8 +69,11 @@ def run_app(cls):
 
     @app.route("/invoicing/process/start", methods=["POST"])
     def start_invoicing_process():
+        invoices_processes_dict = json.loads(request.data)
+        invoices_processes_datas = [InvoicingProcess(**item) for item in invoices_processes_dict]
+        print("start_invoicing_process", invoices_processes_datas)
         try:
-            response_data = shopper_invoicing_adapter.start_invoicing_process()
+            response_data = shopper_invoicing_adapter.start_invoicing_process(invoices_processes_datas)
         except GenericAPIException as e:
             logger.info(
                 "Shopper invoicing integration (start_invoicing_process) request error %s",

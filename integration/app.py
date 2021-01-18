@@ -73,7 +73,7 @@ def run_app(cls):
 
         invoices_processes_datas = []
         print("start_invoicing_process", invoices_processes_dict)
-        for item in invoices_processes_dict["invoices_processes"]:
+        for item in invoices_processes_dict["invoicing_processes"]:
             invoices_processes_datas.append(InvoicingProcess(**item))
 
         try:

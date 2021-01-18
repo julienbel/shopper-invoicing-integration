@@ -1,6 +1,6 @@
 import arrow
 
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, asdict
 from datetime import datetime
 from decimal import Decimal
 from typing import List, Union
@@ -110,6 +110,8 @@ class ExternalInvoiceData(InvoicingItemModel):
     data: dict
     company_fiscal_data: User
 
+    def serialize(self):
+        return asdict(self)
 
 @dataclass
 class InvoicingProcessRejectionRequest:

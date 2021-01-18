@@ -71,9 +71,11 @@ def run_app(cls):
     def start_invoicing_process():
         invoices_processes_dict = json.loads(request.data)
 
+        invoices_processes_datas = []
         print("start_invoicing_process", invoices_processes_dict)
+        for item in invoices_processes_dict["invoices_processes"]:
+            invoices_processes_datas.append(InvoicingProcess(**item))
 
-        invoices_processes_datas = [InvoicingProcess(**item) for item in invoices_processes_dict["invoices_processes"]]
         try:
             response_data = shopper_invoicing_adapter.start_invoicing_process(
                 invoices_processes_datas

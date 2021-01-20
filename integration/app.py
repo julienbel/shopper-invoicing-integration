@@ -77,7 +77,7 @@ def run_app(cls):
         for invoice in invoices_processes:
 
             print(invoice)
-            invoice_process = InvoicingProcess(invoice)
+            invoice_process = InvoicingProcess(**invoice)
             invoices_processes_datas.append(invoice_process)
 
         try:

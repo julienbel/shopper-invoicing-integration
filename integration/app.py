@@ -69,13 +69,15 @@ def run_app(cls):
 
     @app.route("/invoicing/process/start", methods=["POST"])
     def start_invoicing_process():
-        invoices_processes_dict = json.loads(request.data)
+        invoices_processes = json.loads(request.data)
 
         invoices_processes_datas = []
-        print("start_invoicing_process", invoices_processes_dict)
-        for item in invoices_processes_dict:
-            print("item", item)
-            invoice_process = InvoicingProcess(**item)
+        print("start_invoicing_process", len(invoices_processes))
+        print("type", type(invoices_processes))
+        for invoice in invoices_processes:
+
+            print(invoice)
+            invoice_process = InvoicingProcess(invoice)
             invoices_processes_datas.append(invoice_process)
 
         try:

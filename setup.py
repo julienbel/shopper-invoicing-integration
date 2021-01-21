@@ -4,7 +4,7 @@ import setuptools
 
 setup(
     name="shopper_invoicing_integration",
-    version="0.dev2.8.1",
+    version="0.dev2.8.2",
     packages=setuptools.find_packages(),
     license="",
     long_description=open("README.md").read(),
@@ -16,6 +16,6 @@ setup(
         "Flask-Caching==1.8",
         "sentry-sdk==0.14.0",
         "arrow==0.15.5",
-        "django-xhtml2pdf==0.0.4"
+        "pdfkit==0.6.1"
     ],
 )

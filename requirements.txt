@@ -38,4 +38,4 @@ webencodings==0.5.1
 python-stdnum==1.12
 Werkzeug==1.0.1
 arrow==0.15.5
-django-xhtml2pdf==0.0.4
+pdfkit==0.6.1

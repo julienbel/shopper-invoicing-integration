@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    @page {
+      size: letter portrait;
+      margin-top: 1.0cm;
+      margin-bottom: 3.0cm;
+      margin-left: 2.0cm;
+      margin-right: 2.0cm;
+    }
+
+    body {
+      font-family: "Avenir Next", Arial, sans-serif;
+      font-size: medium;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 15px;
+    }
+
+    th,
+    td {
+      padding-left: 5px;
+      padding-top: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      text-align: left;
+      padding-left: 5px;
+    }
+
+    h4 {
+      font-weight: normal;
+    }
+
+    .payment-key {
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    table {
+      margin-top: 20px;
+      font-size: 13px;
+      margin-bottom: 35px;
+    }
+
+    .title {
+      padding-top: 25px;
+    }
+
+    img {
+      display: inline;
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+  <img src="{% static 'payroll/img/Logo.png' %}" class="img" />
+  <div class="content">
+    <h4 class="title">Hey {{ payee_first_name }},</h4>
+    <p>This is your weekly payment settlement for {{ date }}.</p>
+    <p><span class="payment-key">Invoice Number:</span> {{ invoice_id }}</p>
+    <p><span class="payment-key">Invoice Date:</span> {{ invoice_created_at }}</p>
+    {% if taxes_parameters.apply_taxes %}
+    <p><span class="payment-key">Business Name:</span> {{ taxes_parameters.business_or_trading_name }}</p>
+    <p><span class="payment-key">{{ taxes_parameters.registration_number_name }}:</span>
+      {{ taxes_parameters.registration_number }}</p>
+    {% else %}
+    <p><span class="payment-key">No tax information registered for your account.</span></p>
+    {% endif %}
+    <p><span class="payment-key">To:</span> Cornershop Technologies Canada ULC</p>
+    <table>
+      <tr>
+        <th>
+          Date
+        </th>
+        <th>
+          {% if taxes_parameters.apply_taxes %}Net {% endif %}Amount (CAD)
+        </th>
+        {% if taxes_parameters.apply_taxes %}
+        {% if hst_registration_number %}
+        <th>
+          Tax rate
+        </th>
+        <th>
+          {{ taxes_parameters.tax_name }} amount (CAD)
+        </th>
+        {% elif qst_registration_number %}
+        <th>
+          GST rate
+        </th>
+        <th>
+          GST amount (CAD)
+        </th>
+        <th>
+          QST rate
+        </th>
+        <th>
+          QST amount (CAD)
+        </th>
+        {% elif gst_registration_number %}
+        <th>
+          GST rate
+        </th>
+        <th>
+          GST amount (CAD)
+        </th>
+        {% endif %}
+        <th>
+          Total Amount (CAD)
+        </th>
+        {% endif %}
+        <th>
+          Details
+        </th>
+      </tr>
+      {% for payment in payments %}
+      <tr>
+        <td>
+          {{ payment.date }}
+        </td>
+        <td>
+          {{ payment.amount }}
+        </td>
+        {% if taxes_parameters.apply_taxes %}
+        {% if hst_registration_number %}
+        <td>
+          {{ payment.hst_tax_rate }}%
+        </td>
+        <td>
+          {{ payment.hst_amount }}
+        </td>
+        {% elif qst_registration_number %}
+        <td>
+          {{ payment.gst_tax_rate }}%
+        </td>
+        <td>
+          {{ payment.gst_amount }}
+        </td>
+        <td>
+          {{ payment.qst_tax_rate }}%
+        </td>
+        <td>
+          {{ payment.qst_amount }}
+        </td>
+        {% elif gst_registration_number %}
+        <td>
+          {{ payment.gst_tax_rate }}%
+        </td>
+        <td>
+          {{ payment.gst_amount }}
+        </td>
+        {% endif %}
+        <td>
+          {{ payment.total_amount }}
+        </td>
+        {% endif %}
+        <td>
+          {{ payment.details }}
+        </td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td>
+          <strong>Total</strong>
+        </td>
+        <td>
+          {{ total_payment.amount }}
+        </td>
+        {% if taxes_parameters.apply_taxes %}
+        <td>
+
+        </td>
+        {% if hst_registration_number %}
+        <td>
+          {{ total_payment.total_hst_amount }}
+        </td>
+        {% elif qst_registration_number %}
+        <td>
+          {{ total_payment.total_gst_amount }}
+        </td>
+        <td>
+
+        </td>
+        <td>
+          {{ total_payment.total_qst_amount }}
+        </td>
+        {% elif gst_registration_number %}
+        <td>
+          {{ total_payment.total_gst_amount }}
+        </td>
+        {% endif %}
+        <td>
+          {{ total_payment.total_amount }}
+        </td>
+        {% endif %}
+        <td>
+        </td>
+      </tr>
+    </table>
+    The Cornershop team
+  </div>
+</body>
+
+</html>

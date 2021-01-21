@@ -12,6 +12,8 @@ class InvoicingItemModel:
     uuid: UUID
     created_at: datetime
 
+    def serialize(self):
+        return asdict(self)
 
 @dataclass
 class UpdatableInvoicingItemModel(InvoicingItemModel):
@@ -110,8 +112,6 @@ class ExternalInvoiceData(InvoicingItemModel):
     data: dict
     company_fiscal_data: User
 
-    def serialize(self):
-        return asdict(self)
 
 @dataclass
 class InvoicingProcessRejectionRequest:

@@ -35,7 +35,7 @@ def run_app(cls):
     shopper_invoicing_adapter = cls()
 
     app = Flask(__name__)
-    app.config['EXPLAIN_TEMPLATE_LOADING'] = True
+    # app.config['EXPLAIN_TEMPLATE_LOADING'] = True
 
     def get_error_response(e, code):
         try:

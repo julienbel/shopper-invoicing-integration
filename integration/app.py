@@ -86,7 +86,7 @@ def run_app(cls):
             return get_error_response(e, 400)
 
         try:
-            shopper_invoicing_adapter.emit_notificication([])
+            shopper_invoicing_adapter.emit_notificication(external_invoices)
         except GenericAPIException as e:
             logger.info(
                 "Shopper invoicing integration () request error %s",

@@ -73,6 +73,7 @@ def run_app(cls):
         invoices_processes = json.loads(request.data)
         invoices_processes_datas = [InvoicingProcess(**invoice) for invoice in invoices_processes]
 
+        print("----> start_invoicing_process ")
         try:
             external_invoices = shopper_invoicing_adapter.start_invoicing_process(
                 invoices_processes_datas
@@ -85,6 +86,7 @@ def run_app(cls):
             )
             return get_error_response(e, 400)
 
+        print("----> emit_notificication ")
         try:
             shopper_invoicing_adapter.emit_notificication(external_invoices)
         except GenericAPIException as e:

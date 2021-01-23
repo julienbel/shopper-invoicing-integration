@@ -89,7 +89,7 @@ def run_app(cls):
 
         print("----> [lib]:emit_notificication ")
         try:
-            shopper_invoicing_adapter.emit_notificication(external_invoices)
+            shopper_invoicing_adapter.emit_notification(external_invoices)
         except GenericAPIException as e:
             print("GenericAPIException", e)
             logger.info(

@@ -8,3 +8,13 @@ class GenericSatelliteException(Exception):
 
 class UnauthorizedSatelliteException(GenericSatelliteException):
     error_code = "SATELLITE_UNAUTHORIZED_ERROR"
+
+
+class InvoicingProcessException(GenericSatelliteException):
+    pass
+
+class PdfGenerationException(InvoicingProcessException):
+    pass
+
+class SendEmailException(InvoicingProcessException):
+    pass

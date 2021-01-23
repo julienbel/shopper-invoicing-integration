@@ -47,7 +47,7 @@ def run_app(cls):
                 ErrorResponse(
                     error_details=[
                         ErrorDetail(code=e.error_code, message=error_message)
-                    ],
+                    ]
                 )
             ),
             code,
@@ -72,8 +72,9 @@ def run_app(cls):
     def start_invoicing_process():
         invoices_processes = json.loads(request.data)
         invoices_processes_datas = [InvoicingProcess(**invoice) for invoice in invoices_processes]
+
         try:
-            response_data = shopper_invoicing_adapter.start_invoicing_process(
+            external_invoices = shopper_invoicing_adapter.start_invoicing_process(
                 invoices_processes_datas
             )
         except GenericAPIException as e:
@@ -84,7 +85,17 @@ def run_app(cls):
             )
             return get_error_response(e, 400)
 
-        return jsonify(Response(data=response_data))
+        try:
+            shopper_invoicing_adapter.emit_notificication([])
+        except GenericAPIException as e:
+            logger.info(
+                "Shopper invoicing integration () request error %s",
+                e.error_message,
+                extra=get_logger_data(e),
+            )
+            return get_error_response(e, 400)
+
+        return jsonify(Response(data={}))
 
     @app.route("/healthz", methods=["GET"])
     def health():

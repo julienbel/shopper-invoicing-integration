@@ -1,27 +1,214 @@
-
 <!DOCTYPE html>
+<html lang="en">
 
-<html>
 <head>
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    @page {
+      size: letter portrait;
+      margin-top: 1.0cm;
+      margin-bottom: 3.0cm;
+      margin-left: 2.0cm;
+      margin-right: 2.0cm;
+    }
 
+    body {
+      font-family: "Avenir Next", Arial, sans-serif;
+      font-size: medium;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 15px;
+    }
+
+    th,
+    td {
+      padding-left: 5px;
+      padding-top: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      text-align: left;
+      padding-left: 5px;
+    }
+
+    h4 {
+      font-weight: normal;
+    }
+
+    .payment-key {
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+    }
+
+    table {
+      margin-top: 20px;
+      font-size: 13px;
+      margin-bottom: 35px;
+    }
+
+    .title {
+      padding-top: 25px;
+    }
+
+    img {
+      display: inline;
+      text-align: right;
+    }
+  </style>
 </head>
-<body class="body" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; line-height: 1; background-color: #fafafa; display: table; width: 100%; min-height: 100%"><style>@media only screen and (max-width: 450px) { .notification .content .mini-button-right { white-space: nowrap; float: none } }</style>
-<div class="notification" style='margin: 0; border: 0; font-size: 100%; font: inherit; background-color: #fafafa; padding: 10px 20px; font-family: "Avenir Next", "Avenir", sans-serif; -webkit-font-smoothing: antialiased; display: table-cell; vertical-align: middle'>
-<div class="header" style="border: 0; font-size: 100%; font: inherit; vertical-align: baseline; padding: 24px 12px; max-width: 560px; margin: 0 auto">
-<div class="logo" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; width: 146px; height: 25px" title="Cornershop">
-<img class="img" src="/static/Logo@2x.png" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; width: 146px"/>
-</div>
-<div class="clearfix" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline"></div>
-</div>
-<div class="content" style="border: 0; font: inherit; vertical-align: baseline; border-radius: 6px; background: white; padding: 24px; max-width: 560px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); color: #4a4a4a; font-size: 17px; line-height: 22px; font-weight: 0">
-<div class="heading" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; margin-bottom: 24px">
-        {% blocktrans with shopper_first_name=shopper_name %}EMAIL_SHOPPERS_HELLO_NAME_COMMA {{ shopper_first_name }}{% endblocktrans %}
-      </div>
-<p>{% trans "SHOPPERCENTER_EMAIL_CONFIRMATION_OF_ACCEPTED_COMMISSIONS" %}</p>
-<p>{% trans "SHOPPERCENTER_PAYMENT_CONFIRMATION_EMAIL_GOOD_BYE" %}</p>
-<p>{% trans "SHOPPERCENTER_EMAIL_FOOTER_THE_CORNERSHOP_TEAM" %}</p>
-</div>
-</div>
+
+<body>
+  <img src="/static/img/Logo.png' %}" class="img" />
+  <div class="content">
+    <h4 class="title">Hey {{ payee_first_name }},</h4>
+    <p>This is your weekly payment settlement for {{ date }}.</p>
+    <p><span class="payment-key">Invoice Number:</span> {{ invoice_id }}</p>
+    <p><span class="payment-key">Invoice Date:</span> {{ invoice_created_at }}</p>
+    {% if taxes_parameters.apply_taxes %}
+    <p><span class="payment-key">Business Name:</span> {{ taxes_parameters.business_or_trading_name }}</p>
+    <p><span class="payment-key">{{ taxes_parameters.registration_number_name }}:</span>
+      {{ taxes_parameters.registration_number }}</p>
+    {% else %}
+    <p><span class="payment-key">No tax information registered for your account.</span></p>
+    {% endif %}
+    <p><span class="payment-key">To:</span> Cornershop Technologies Canada ULC</p>
+    <table>
+      <tr>
+        <th>
+          Date
+        </th>
+        <th>
+          {% if taxes_parameters.apply_taxes %}Net {% endif %}Amount (CAD)
+        </th>
+        {% if taxes_parameters.apply_taxes %}
+        {% if hst_registration_number %}
+        <th>
+          Tax rate
+        </th>
+        <th>
+          {{ taxes_parameters.tax_name }} amount (CAD)
+        </th>
+        {% elif qst_registration_number %}
+        <th>
+          GST rate
+        </th>
+        <th>
+          GST amount (CAD)
+        </th>
+        <th>
+          QST rate
+        </th>
+        <th>
+          QST amount (CAD)
+        </th>
+        {% elif gst_registration_number %}
+        <th>
+          GST rate
+        </th>
+        <th>
+          GST amount (CAD)
+        </th>
+        {% endif %}
+        <th>
+          Total Amount (CAD)
+        </th>
+        {% endif %}
+        <th>
+          Details
+        </th>
+      </tr>
+      {% for payment in payments %}
+      <tr>
+        <td>
+          {{ payment.date }}
+        </td>
+        <td>
+          {{ payment.amount }}
+        </td>
+        {% if taxes_parameters.apply_taxes %}
+        {% if hst_registration_number %}
+        <td>
+          {{ payment.hst_tax_rate }}%
+        </td>
+        <td>
+          {{ payment.hst_amount }}
+        </td>
+        {% elif qst_registration_number %}
+        <td>
+          {{ payment.gst_tax_rate }}%
+        </td>
+        <td>
+          {{ payment.gst_amount }}
+        </td>
+        <td>
+          {{ payment.qst_tax_rate }}%
+        </td>
+        <td>
+          {{ payment.qst_amount }}
+        </td>
+        {% elif gst_registration_number %}
+        <td>
+          {{ payment.gst_tax_rate }}%
+        </td>
+        <td>
+          {{ payment.gst_amount }}
+        </td>
+        {% endif %}
+        <td>
+          {{ payment.total_amount }}
+        </td>
+        {% endif %}
+        <td>
+          {{ payment.details }}
+        </td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td>
+          <strong>Total</strong>
+        </td>
+        <td>
+          {{ total_payment.amount }}
+        </td>
+        {% if taxes_parameters.apply_taxes %}
+        <td>
+
+        </td>
+        {% if hst_registration_number %}
+        <td>
+          {{ total_payment.total_hst_amount }}
+        </td>
+        {% elif qst_registration_number %}
+        <td>
+          {{ total_payment.total_gst_amount }}
+        </td>
+        <td>
+
+        </td>
+        <td>
+          {{ total_payment.total_qst_amount }}
+        </td>
+        {% elif gst_registration_number %}
+        <td>
+          {{ total_payment.total_gst_amount }}
+        </td>
+        {% endif %}
+        <td>
+          {{ total_payment.total_amount }}
+        </td>
+        {% endif %}
+        <td>
+        </td>
+      </tr>
+    </table>
+    The Cornershop team
+  </div>
 </body>
+
 </html>

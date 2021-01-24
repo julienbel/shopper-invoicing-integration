@@ -39,3 +39,4 @@ python-stdnum==1.12
 Werkzeug==1.0.1
 arrow==0.15.5
 xhtml2pdf==0.2.5
+Flask-Email==1.4.4

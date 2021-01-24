@@ -6,6 +6,7 @@ from os import getenv
 import sentry_sdk
 from flask import Flask, jsonify, request
 
+from flask_mail import Mail, Message
 from integration.rest_service.adapters import ShopperInvoicingClientAdapter
 from integration.rest_service.data_classes import (
     ErrorDetail,
@@ -14,6 +15,7 @@ from integration.rest_service.data_classes import (
     InvoicingProcess
 )
 from integration.rest_service.providers.exceptions import GenericAPIException
+
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +38,15 @@ def run_app(cls):
 
     app = Flask(__name__)
     # app.config['EXPLAIN_TEMPLATE_LOADING'] = True
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USERNAME'] = 'yourId@gmail.com'
+    app.config['MAIL_PASSWORD'] = '*****'
+    app.config['MAIL_USE_TLS'] = False
+    app.config['MAIL_USE_SSL'] = True
+    app.mail = Mail(app)
+
+
 
     def get_error_response(e, code):
         try:

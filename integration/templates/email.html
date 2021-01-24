@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+
+</head>
+<body class="body" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; line-height: 1; background-color: #fafafa; display: table; width: 100%; min-height: 100%"><style>@media only screen and (max-width: 450px) { .notification .content .mini-button-right { white-space: nowrap; float: none } }</style>
+<div class="notification" style='margin: 0; border: 0; font-size: 100%; font: inherit; background-color: #fafafa; padding: 10px 20px; font-family: "Avenir Next", "Avenir", sans-serif; -webkit-font-smoothing: antialiased; display: table-cell; vertical-align: middle'>
+<div class="header" style="border: 0; font-size: 100%; font: inherit; vertical-align: baseline; padding: 24px 12px; max-width: 560px; margin: 0 auto">
+<div class="logo" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; width: 146px; height: 25px" title="Cornershop">
+<img class="img" src="/static/Logo@2x.png" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; width: 146px"/>
+</div>
+<div class="clearfix" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline"></div>
+</div>
+<div class="content" style="border: 0; font: inherit; vertical-align: baseline; border-radius: 6px; background: white; padding: 24px; max-width: 560px; margin: 0 auto; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); color: #4a4a4a; font-size: 17px; line-height: 22px; font-weight: 0">
+<div class="heading" style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; margin-bottom: 24px">
+        {% blocktrans with shopper_first_name=shopper_name %}EMAIL_SHOPPERS_HELLO_NAME_COMMA {{ shopper_first_name }}{% endblocktrans %}
+      </div>
+<p>{% trans "SHOPPERCENTER_EMAIL_CONFIRMATION_OF_ACCEPTED_COMMISSIONS" %}</p>
+<p>{% trans "SHOPPERCENTER_PAYMENT_CONFIRMATION_EMAIL_GOOD_BYE" %}</p>
+<p>{% trans "SHOPPERCENTER_EMAIL_FOOTER_THE_CORNERSHOP_TEAM" %}</p>
+</div>
+</div>
+</body>
+</html>

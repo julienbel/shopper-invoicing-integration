@@ -4,14 +4,12 @@ import setuptools
 
 setup(
     name="shopper_invoicing_integration",
-    version="0.dev4.7.3",
+    version="0.dev4.7.4",
     packages=setuptools.find_packages(),
     include_package_data=True,
     package_data = {
         '': ['templates/*.html'],
-        '': ['static/*.png'],
-        'templates': ['*.html'],
-        'static': ['*.png'],
+        'templates': ['*.html']
     },
     license="",
     long_description=open("README.md").read(),

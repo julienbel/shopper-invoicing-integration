@@ -22,6 +22,6 @@ setup(
         "sentry-sdk==0.14.0",
         "arrow==0.15.5",
         "xhtml2pdf==0.2.5",
-        "Flask-Email==1.4.4",
+        "Flask-Mail==0.9.1",
     ],
 )

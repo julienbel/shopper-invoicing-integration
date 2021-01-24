@@ -4,7 +4,7 @@ import setuptools
 
 setup(
     name="shopper_invoicing_integration",
-    version="0.dev4.3",
+    version="0.dev4.4",
     packages=setuptools.find_packages(),
     include_package_data=True,
     package_data = {

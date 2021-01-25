@@ -37,14 +37,16 @@ def run_app(cls):
     shopper_invoicing_adapter = cls()
 
     app = Flask(__name__)
+
     app.config['DEBUG'] = True
     app.config['EXPLAIN_TEMPLATE_LOADING'] = True
-    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USERNAME'] = 'julien.bellanger@gmail.com'
-    app.config['MAIL_PASSWORD'] = '41Bellem&Baya41'
-    app.config['MAIL_USE_TLS'] = False
-    app.config['MAIL_USE_SSL'] = True
+
+    app.config['MAIL_SERVER'] = getenv("MAIL_SERVER")
+    app.config['MAIL_PORT'] = getenv("MAIL_PORT")
+    app.config['MAIL_USERNAME'] = getenv("MAIL_USERNAME")
+    app.config['MAIL_PASSWORD'] = getenv("MAIL_PASSWORD")
+    app.config['MAIL_USE_TLS'] = getenv("MAIL_USE_TLS") == "True"
+
     app.mail = Mail(app)
 
 

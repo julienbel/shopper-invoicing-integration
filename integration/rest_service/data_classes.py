@@ -98,7 +98,7 @@ class InvoicingProcess(UpdatableInvoicingItemModel):
 
 @dataclass
 class InvoicingProcessRequest:
-    process = InvoicingProcess
+    process: InvoicingProcess
     invoice: Invoice
 
     def serialize(self):

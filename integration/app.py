@@ -39,7 +39,7 @@ def run_app(cls):
     app = Flask(__name__)
 
     app.config['DEBUG'] = True
-    app.config['EXPLAIN_TEMPLATE_LOADING'] = getenv("MAIL_USE_TLS", False) == "True"
+    app.config['EXPLAIN_TEMPLATE_LOADING'] = getenv("EXPLAIN_TEMPLATE_LOADING", False) == "True"
 
     app.config['MAIL_SERVER'] = getenv("MAIL_SERVER")
     app.config['MAIL_PORT'] = getenv("MAIL_PORT")
@@ -89,13 +89,11 @@ def run_app(cls):
         invoices_processes = json.loads(request.data)
         invoices_processes_datas = [InvoicingProcess(**invoice) for invoice in invoices_processes]
 
-        print("----> [lib]:start_invoicing_process ")
         try:
             external_invoices = shopper_invoicing_adapter.start_invoicing_process(
                 invoices_processes_datas
             )
         except GenericAPIException as e:
-            print("GenericAPIException", e)
             logger.info(
                 "Shopper invoicing integration (start_invoicing_process) request error %s",
                 e.error_message,
@@ -103,13 +101,11 @@ def run_app(cls):
             )
             return get_error_response(e, 400)
 
-        print("----> [lib]:emit_notificication ")
         try:
             shopper_invoicing_adapter.emit_notification(external_invoices)
         except GenericAPIException as e:
-            print("GenericAPIException", e)
             logger.info(
-                "Shopper invoicing integration () request error %s",
+                "Shopper invoicing integration (emit_notification) request error %s",
                 e.error_message,
                 extra=get_logger_data(e),
             )

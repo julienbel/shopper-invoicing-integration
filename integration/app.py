@@ -93,8 +93,8 @@ def run_app(cls):
         print("lib", invoices_processes)
         invoices_processes_datas = [
             InvoicingProcessRequest(
-                process=InvoicingProcess(invoice["process"]),
-                invoice=Invoice(invoice["invoice"]),
+                process=InvoicingProcess(**invoice["process"]),
+                invoice=Invoice(**invoice["invoice"]),
             ) for invoice in invoices_processes
         ]
 

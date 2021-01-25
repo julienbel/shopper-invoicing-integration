@@ -1,9 +1,9 @@
 from typing import List
-from .data_classes import InvoicingProcess, ExternalInvoiceData
+from .data_classes import ExternalInvoiceData, InvoicingProcessRequest
 
 
 class ShopperInvoicingClientAdapter:
-    def start_invoicing_process(self, invoices_process_datas: List[InvoicingProcess]) -> List[ExternalInvoiceData]:
+    def start_invoicing_process(self, invoices_process_datas: List[InvoicingProcessRequest]) -> List[ExternalInvoiceData]:
         pass
 
     def emit_notification(self, invoices_process_datas: List[ExternalInvoiceData]) -> None:

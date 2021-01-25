@@ -12,7 +12,7 @@ from integration.rest_service.data_classes import (
     ErrorDetail,
     ErrorResponse,
     Response,
-    InvoicingProcess
+    InvoicingProcessRequest
 )
 from integration.rest_service.providers.exceptions import GenericAPIException
 
@@ -87,7 +87,7 @@ def run_app(cls):
     @app.route("/invoicing/process/start", methods=["POST"])
     def start_invoicing_process():
         invoices_processes = json.loads(request.data)
-        invoices_processes_datas = [InvoicingProcess(**invoice) for invoice in invoices_processes]
+        invoices_processes_datas = [InvoicingProcessRequest(**invoice) for invoice in invoices_processes]
 
         try:
             external_invoices = shopper_invoicing_adapter.start_invoicing_process(

@@ -97,6 +97,15 @@ class InvoicingProcess(UpdatableInvoicingItemModel):
 
 
 @dataclass
+class InvoicingProcessRequest:
+    process = InvoicingProcess
+    invoice: Invoice
+
+    def serialize(self):
+        return asdict(self)
+
+
+@dataclass
 class CompanyFiscalData(User):
     pass
 

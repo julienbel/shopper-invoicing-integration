@@ -4,12 +4,12 @@ import setuptools
 
 setup(
     name="shopper_invoicing_integration",
-    version="0.dev3.2",
+    version="0.dev6",
     packages=setuptools.find_packages(),
     include_package_data=True,
     package_data = {
         '': ['templates/*.html'],
-        'templates': ['*.html'],
+        'templates': ['*.html']
     },
     license="",
     long_description=open("README.md").read(),
@@ -21,6 +21,7 @@ setup(
         "Flask-Caching==1.8",
         "sentry-sdk==0.14.0",
         "arrow==0.15.5",
-        "xhtml2pdf==0.2.5"
+        "xhtml2pdf==0.2.5",
+        "Flask-Mail==0.9.1",
     ],
 )

@@ -5,6 +5,7 @@ from os import getenv
 
 import sentry_sdk
 from flask import Flask, jsonify, request
+from flask_mail import Mail, Message
 
 from integration.rest_service.adapters import ShopperInvoicingClientAdapter
 from integration.rest_service.data_classes import (
@@ -14,6 +15,7 @@ from integration.rest_service.data_classes import (
     InvoicingProcess
 )
 from integration.rest_service.providers.exceptions import GenericAPIException
+
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +37,19 @@ def run_app(cls):
     shopper_invoicing_adapter = cls()
 
     app = Flask(__name__)
+
+    app.config['DEBUG'] = True
     app.config['EXPLAIN_TEMPLATE_LOADING'] = True
+
+    app.config['MAIL_SERVER'] = getenv("MAIL_SERVER")
+    app.config['MAIL_PORT'] = getenv("MAIL_PORT")
+    app.config['MAIL_USERNAME'] = getenv("MAIL_USERNAME")
+    app.config['MAIL_PASSWORD'] = getenv("MAIL_PASSWORD")
+    app.config['MAIL_USE_TLS'] = getenv("MAIL_USE_TLS") == "True"
+
+    app.mail = Mail(app)
+
+
 
     def get_error_response(e, code):
         try:
@@ -47,7 +61,7 @@ def run_app(cls):
                 ErrorResponse(
                     error_details=[
                         ErrorDetail(code=e.error_code, message=error_message)
-                    ],
+                    ]
                 )
             ),
             code,
@@ -72,11 +86,14 @@ def run_app(cls):
     def start_invoicing_process():
         invoices_processes = json.loads(request.data)
         invoices_processes_datas = [InvoicingProcess(**invoice) for invoice in invoices_processes]
+
+        print("----> [lib]:start_invoicing_process ")
         try:
-            response_data = shopper_invoicing_adapter.start_invoicing_process(
+            external_invoices = shopper_invoicing_adapter.start_invoicing_process(
                 invoices_processes_datas
             )
         except GenericAPIException as e:
+            print("GenericAPIException", e)
             logger.info(
                 "Shopper invoicing integration (start_invoicing_process) request error %s",
                 e.error_message,
@@ -84,7 +101,19 @@ def run_app(cls):
             )
             return get_error_response(e, 400)
 
-        return jsonify(Response(data=response_data))
+        print("----> [lib]:emit_notificication ")
+        try:
+            shopper_invoicing_adapter.emit_notification(external_invoices)
+        except GenericAPIException as e:
+            print("GenericAPIException", e)
+            logger.info(
+                "Shopper invoicing integration () request error %s",
+                e.error_message,
+                extra=get_logger_data(e),
+            )
+            return get_error_response(e, 400)
+
+        return jsonify(Response(data={}))
 
     @app.route("/healthz", methods=["GET"])
     def health():

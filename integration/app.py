@@ -50,6 +50,7 @@ def run_app(cls):
     app.config['MAIL_DEBUG'] = getenv("MAIL_DEBUG", False) == "True"
     app.config['SECURITY_EMAIL_SENDER'] = getenv("SECURITY_EMAIL_SENDER")
 
+    print(app.config)
     app.mail = Mail(app)
 
 

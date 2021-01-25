@@ -49,11 +49,6 @@ def run_app(cls):
     app.config['MAIL_USE_SSL'] = getenv("MAIL_USE_SSL", False) == "True"
     app.config['MAIL_DEBUG'] = getenv("MAIL_DEBUG", False) == "True"
 
-    print(app.config['MAIL_SERVER'])
-    print(app.config['MAIL_PORT'])
-    print(app.config['MAIL_USERNAME'])
-    print(app.config['MAIL_PASSWORD'])
-
     app.mail = Mail(app)
 
 

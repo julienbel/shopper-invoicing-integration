@@ -39,13 +39,16 @@ def run_app(cls):
     app = Flask(__name__)
 
     app.config['DEBUG'] = True
-    app.config['EXPLAIN_TEMPLATE_LOADING'] = True
+    app.config['EXPLAIN_TEMPLATE_LOADING'] = getenv("MAIL_USE_TLS", False) == "True"
 
     app.config['MAIL_SERVER'] = getenv("MAIL_SERVER")
     app.config['MAIL_PORT'] = getenv("MAIL_PORT")
     app.config['MAIL_USERNAME'] = getenv("MAIL_USERNAME")
     app.config['MAIL_PASSWORD'] = getenv("MAIL_PASSWORD")
-    app.config['MAIL_USE_TLS'] = getenv("MAIL_USE_TLS") == "True"
+    app.config['MAIL_USE_TLS'] = getenv("MAIL_USE_TLS", False) == "True"
+    app.config['MAIL_USE_SSL'] = getenv("MAIL_USE_SSL", False) == "True"
+    app.config['MAIL_DEBUG'] = getenv("MAIL_DEBUG", False) == "True"
+    app.config['SECURITY_EMAIL_SENDER'] = getenv("SECURITY_EMAIL_SENDER")
 
     app.mail = Mail(app)
 

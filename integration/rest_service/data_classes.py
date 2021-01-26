@@ -115,6 +115,7 @@ class ExternalInvoiceData(InvoicingItemModel):
     process_status: str
     data: dict
     company_fiscal_data: User
+    requester: str
 
 
 @dataclass

@@ -1,8 +1,9 @@
+import arrow
 import json
 import logging
 from json import JSONDecodeError
 from os import getenv
-
+from uuid import UUID
 import sentry_sdk
 from flask import Flask, jsonify, request
 from flask_mail import Mail, Message
@@ -14,7 +15,11 @@ from integration.rest_service.data_classes import (
     Response,
     Invoice,
     InvoicingProcess,
-    InvoicingProcessRequest
+    InvoicingProcessRequest,
+InvoiceLine,
+KeyValueField,
+TaxInformation,
+PartnerFiscalData
 )
 from integration.rest_service.providers.exceptions import GenericAPIException
 
@@ -91,10 +96,34 @@ def run_app(cls):
         invoices_processes = json.loads(request.data)
 
         print("lib", invoices_processes)
+        print("", type(invoices_processes["invoice"]))
+
+        # uuid=UUID(invoice["process"].get("uuid")),
+        # created_at=arrow.get(
+        #                 invoice["process"].get("created_at")
+        #             ).datetime,
+        # updated_at=arrow.get(
+        #                 invoice["process"].get("updated_at")
+        #             ).datetime,
+        # user_uuid=UUID(invoice["process"].get("uuid")),
+        # requester=invoice["process"].get("requester"),
+        # process_status=invoice["process"].get("process_status"),
+
         invoices_processes_datas = [
             InvoicingProcessRequest(
                 process=InvoicingProcess(**invoice["process"]),
-                invoice=Invoice(**invoice["invoice"]),
+                invoice=Invoice(
+                    user_uuid=UUID(invoice["invoice"].get("user_uuid")),
+                    gross_amount_e5=int(invoice["invoice"].get("gross_amount_e5")),
+                    lines=[InvoiceLine(**line) for line in invoice["invoice"].get("lines")],
+                    taxes=[TaxInformation(**taxe) for taxe in invoice["invoice"].get("taxes")],
+                    partner_fiscal_data=PartnerFiscalData(
+                        full_name=invoice["invoice"]["partner_fiscal_data"].get("full_name"),
+                        form_of_identification=[KeyValueField(**item) for item in invoice["invoice"]["partner_fiscal_data"].get("form_of_identification")],
+                        extra_fields=[KeyValueField(**item) for item in invoice["invoice"]["partner_fiscal_data"].get("extra_fields")]
+                    ),
+                    #**invoice["invoice"]
+                ),
             ) for invoice in invoices_processes
         ]
 

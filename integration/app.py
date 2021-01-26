@@ -96,7 +96,6 @@ def run_app(cls):
         invoices_processes = json.loads(request.data)
 
         print("lib", invoices_processes)
-        print("", type(invoices_processes["invoice"]))
 
         # uuid=UUID(invoice["process"].get("uuid")),
         # created_at=arrow.get(

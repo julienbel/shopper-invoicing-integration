@@ -95,22 +95,20 @@ def run_app(cls):
     def start_invoicing_process():
         invoices_processes = json.loads(request.data)
 
-        print("lib", invoices_processes)
-
-        # uuid=UUID(invoice["process"].get("uuid")),
-        # created_at=arrow.get(
-        #                 invoice["process"].get("created_at")
-        #             ).datetime,
-        # updated_at=arrow.get(
-        #                 invoice["process"].get("updated_at")
-        #             ).datetime,
-        # user_uuid=UUID(invoice["process"].get("uuid")),
-        # requester=invoice["process"].get("requester"),
-        # process_status=invoice["process"].get("process_status"),
-
         invoices_processes_datas = [
             InvoicingProcessRequest(
-                process=InvoicingProcess(**invoice["process"]),
+                process=InvoicingProcess(
+                    uuid=UUID(invoice["process"].get("uuid")),
+                    created_at=arrow.get(
+                                    invoice["process"].get("created_at")
+                                ).datetime,
+                    updated_at=arrow.get(
+                                    invoice["process"].get("updated_at")
+                                ).datetime,
+                    user_uuid=UUID(invoice["process"].get("uuid")),
+                    requester=invoice["process"].get("requester"),
+                    process_status=invoice["process"].get("process_status"),
+                ),
                 invoice=Invoice(
                     uuid=UUID(invoice["invoice"].get("uuid")),
                     created_at=arrow.get(
@@ -125,7 +123,6 @@ def run_app(cls):
                         form_of_identification=[KeyValueField(**item) for item in invoice["invoice"]["partner_fiscal_data"].get("form_of_identification")],
                         extra_fields=[KeyValueField(**item) for item in invoice["invoice"]["partner_fiscal_data"].get("extra_fields")]
                     ),
-                    #**invoice["invoice"]
                 ),
             ) for invoice in invoices_processes
         ]

@@ -112,6 +112,10 @@ def run_app(cls):
             InvoicingProcessRequest(
                 process=InvoicingProcess(**invoice["process"]),
                 invoice=Invoice(
+                    uuid=UUID(invoice["invoice"].get("uuid")),
+                    created_at=arrow.get(
+                        invoice["invoice"].get("created_at")
+                    ).datetime,
                     user_uuid=UUID(invoice["invoice"].get("user_uuid")),
                     gross_amount_e5=int(invoice["invoice"].get("gross_amount_e5")),
                     lines=[InvoiceLine(**line) for line in invoice["invoice"].get("lines")],

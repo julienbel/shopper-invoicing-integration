@@ -38,7 +38,7 @@ def run_app(cls):
     ), "adapter requires to extend from ShopperInvoicingClientAdapter class"
     shopper_invoicing_adapter = cls()
 
-    app = Flask(__name__, static_url_path="", static_folder="static")
+    app = Flask(__name__, static_url_path="/static", static_folder="static")
 
     app.config['DEBUG'] = True
     app.config['EXPLAIN_TEMPLATE_LOADING'] = getenv("EXPLAIN_TEMPLATE_LOADING", False) == "True"

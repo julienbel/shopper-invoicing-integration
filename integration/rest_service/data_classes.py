@@ -115,8 +115,14 @@ class ExternalInvoiceData(InvoicingItemModel):
     process_status: str
     data: dict
     company_fiscal_data: User
-    requester: str
 
+@dataclass
+class InvoicingProcessUpdateStatusRequest:
+    user_uuid: UUID
+    requester: str
+    external_response_data: ExternalInvoiceData
+    created_at: str
+    uuid: UUID
 
 @dataclass
 class ErrorDetail:

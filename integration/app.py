@@ -94,8 +94,6 @@ def run_app(cls):
     @app.route("/invoicing/process/start", methods=["POST"])
     def start_invoicing_process():
         invoices_processes = json.loads(request.data)
-        print(invoices_processes)
-
         invoices_processes_datas = [
             InvoicingProcessRequest(
                 process=InvoicingProcess(

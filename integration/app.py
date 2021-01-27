@@ -121,7 +121,7 @@ def run_app(cls):
                         description=line.get("description"),
                         unit=line.get("unit"),
                         quantity=line.get("quantity"),
-                        amount_e5=line.line.get("amount_e5"),
+                        amount_e5=line.get("amount_e5"),
                         total_amount_e5=line.get("total_amount_e5"),
                         taxes=[TaxInformation(**taxe) for taxe in line.get("taxes")]
                     ) for line in invoice["invoice"].get("lines")],

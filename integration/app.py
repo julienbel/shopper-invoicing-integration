@@ -116,7 +116,14 @@ def run_app(cls):
                     ).datetime,
                     user_uuid=UUID(invoice["invoice"].get("user_uuid")),
                     gross_amount_e5=int(invoice["invoice"].get("gross_amount_e5")),
-                    lines=[InvoiceLine(**line) for line in invoice["invoice"].get("lines")],
+                    lines=[InvoiceLine(
+                        description=line.description,
+                        unit=line.unit,
+                        quantity=line.quantity,
+                        amount_e5=line.amount_e5,
+                        total_amount_e5=line.total_amount_e5,
+                        taxes=[TaxInformation(**taxe) for taxe in line.taxes]
+                    ) for line in invoice["invoice"].get("lines")],
                     taxes=[TaxInformation(**taxe) for taxe in invoice["invoice"].get("taxes")],
                     partner_fiscal_data=PartnerFiscalData(
                         full_name=invoice["invoice"]["partner_fiscal_data"].get("full_name"),
